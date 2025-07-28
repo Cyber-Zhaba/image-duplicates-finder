@@ -36,10 +36,13 @@ def compress512to8(img):
     return apply_convolution(img, kernel, stride)
 
 
-def hexmask(img8x8):
+def hexmask(img8x8, rgb=True):
     def quantize(pixel):
         # ITU-R BT.601 conversion to grayscale
-        gray = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]
+        if rgb:
+            gray = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]
+        else:
+            gray = pixel
         return round(gray * 15 / 255)
 
     brightness_mask = ""
@@ -87,3 +90,10 @@ def sharpen_hash(img_path):
     img_sharpened = apply_convolution(img_rgb, kernel, stride=1)
     img8x8 = compress512to8(img_sharpened)
     return hexmask(img8x8)
+
+def gray_convolution_hash(img_path):
+    img_bgr = cv2.imread(img_path)
+    img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+
+    img8x8 = compress512to8(img_gray)
+    return hexmask(img8x8, False)

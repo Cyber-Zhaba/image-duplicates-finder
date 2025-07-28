@@ -22,6 +22,12 @@ uv sync
 ```
 
 ## Usage
+Use uv
 ```bash
 uv run streamlit main.py
+```
+... or use Docker
+```bash
+docker build -t duplicate-image-finder .
+docker run -p 8501:8501 duplicate-image-finder
 ```
